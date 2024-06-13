@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Models\Product;
 
 class EloquentOrderRepository implements OrderRepository
 {
@@ -31,7 +32,28 @@ class EloquentOrderRepository implements OrderRepository
                 ->save();
         }
 
-        $order->products()->attach($data['product'], ['amount' => $data['amount']]);
+        $newAmount = $amountInData = (int) $data['amount'];
+        $productIdInData = $data['product']->id;
+
+
+        /**
+         * Get all the attached products that have the same id as $data['product']
+         * detach the product;
+         * attach a new product with cumulated amount
+         */
+        $attachedProducts = $order->products()->where('products.id', '=', $productIdInData)->get();
+
+        if (count($attachedProducts) > 0) {
+            $sum = $attachedProducts->reduce(function ($carry, Product $product) {
+                return $carry + $product->orderItem->amount;
+            });
+
+            $order->products()->detach([$productIdInData]);
+
+            $newAmount = $amountInData + $sum;
+        }
+
+        $order->products()->attach($data['product'], ['amount' => $newAmount]);
 
         return $order;
 
