@@ -12,7 +12,8 @@ class ScheduleController extends Controller
     }
     public function index()
     {
-        return $this->scheduler->generate();
+        $schedule = $this->scheduler->generate();
+        return view("schedule.index", ['schedule' => $schedule]);
     }
 
 }

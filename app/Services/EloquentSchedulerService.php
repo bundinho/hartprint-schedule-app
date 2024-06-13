@@ -3,7 +3,6 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Repositories\EloquentOrderRepository;
-use App\Repositories\OrderRepository;
 use App\Services\Calculator\EloquentDurationCalculator;
 use App\Services\Calculator\EloquentSchedulerDateCalculator;
 use App\Services\Contract\SchedulerService;
@@ -17,7 +16,7 @@ class EloquentSchedulerService implements SchedulerService
      * @param \App\Repositories\OrderRepository $orderRepository
      */
     public function __construct(
-        private OrderRepository $orderRepository,
+        private EloquentOrderRepository $orderRepository,
         private EloquentDurationCalculator $durationCalculator,
         private EloquentSchedulerDateCalculator $dateCalculator
     ) {

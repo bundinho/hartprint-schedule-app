@@ -53,6 +53,6 @@ class OrderController extends Controller
         $order = $this->orderService->createOrUpdate($validated);
 
 
-        return redirect("/orders")->with('success', 'The order has been saved.');
+        return redirect("/")->with('message', 'The order has been saved.');
     }
 }
