@@ -4,14 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderCreateRequest;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\User;
+use App\Repositories\ProductRepository;
+use App\Repositories\UserRepository;
+use App\Services\Contract\OrderService;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    /**
+     * @param \App\Repositories\UserRepository $userRepository
+     * @param \App\Repositories\ProductRepository $productRepository
+     */
+    public function __construct(
+        private UserRepository $userRepository,
+        private ProductRepository $productRepository,
+        private OrderService $orderService,
+    ) {
+    }
     /**
      * Display the order creation page
      *
@@ -19,8 +30,9 @@ class OrderController extends Controller
      */
     public function create(): ViewFactory|View
     {
-        $customers = User::orderBy("name", "asc")->get();
-        $products = Product::orderBy('name', 'asc')->get();
+        $customers = $this->userRepository->all();
+        $products = $this->productRepository->all();
+
         return view('order.create', [
             'products' => $products,
             'customers' => $customers
@@ -36,20 +48,10 @@ class OrderController extends Controller
      */
     public function store(OrderCreateRequest $request)
     {
-        $request->get('foundOrder');
-        $customer = User::find($request->get('customer_id'));
-        $order = $request->get('foundOrder');
 
-        if ($order === null) {
-            $order = new Order([
-                'need_by' => $request->get('need_by')
-            ]);
-            $order->customer()
-                ->associate($customer)
-                ->save();
-        }
+        $validated = $request->validated();
+        $order = $this->orderService->createOrUpdate($validated);
 
-        $order->products()->attach($request->get('product'), ['amount' => $request->get('amount')]);
 
         return redirect("/orders")->with('success', 'The order has been saved.');
     }

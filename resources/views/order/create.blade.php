@@ -9,11 +9,11 @@
             @csrf
 
             <div class="mb-6">
-                <label for="customer_id" class="inline-block text-lg mb-2"></label>
+                <label for="customer_id" class="inline-block text-lg mb-2">Customer</label>
                 <select class="border border-gray-200 rounded p-2 w-full" name="customer_id">
                     <option value="">Select a customer</option>
                     @foreach ($customers as $customer)
-                        <option value="{{ $customer->id }}" {{ old('customer_id', $customer->id) ? 'selected' : '' }}>
+                        <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
                             {{ $customer->name }}
                         </option>
                     @endforeach
@@ -25,11 +25,11 @@
             </div>
 
             <div class="mb-6">
-                <label for="product" class="inline-block text-lg mb-2"></label>
+                <label for="product" class="inline-block text-lg mb-2">Product</label>
                 <select class="border border-gray-200 rounded p-2 w-full" name="product">
                     <option value="">Select a product</option>
                     @foreach ($products as $product)
-                        <option value="{{ $product->id }}" {{ old('product', $product->id) ? 'selected' : '' }}>
+                        <option value="{{ $product->id }}" {{ old('product') == $product->id ? 'selected' : '' }}>
                             {{ $product->name }}</option>
                     @endforeach
                 </select>
@@ -38,8 +38,6 @@
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
-
-
 
             <div class="mb-6">
                 <label for="amount" class="inline-block text-lg mb-2">Amount</label>
@@ -52,7 +50,7 @@
             </div>
 
             <div class="mb-6">
-                <label for="need_by" class="inline-block text-lg mb-2">Job Location</label>
+                <label for="need_by" class="inline-block text-lg mb-2">Need by</label>
                 <input type="date" class="border border-gray-200 rounded p-2 w-full" name="need_by"
                     placeholder="20024-05-01" value="{{ old('need_by') }}" />
 
