@@ -6,6 +6,7 @@ use App\Repositories\EloquentOrderRepository;
 use App\Services\Calculator\EloquentDurationCalculator;
 use App\Services\Calculator\EloquentSchedulerDateCalculator;
 use App\Services\Contract\SchedulerService;
+use App\Services\Contract\SortCalculator;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -13,12 +14,17 @@ class EloquentSchedulerService implements SchedulerService
 {
 
     /**
-     * @param \App\Repositories\OrderRepository $orderRepository
+     * Summary of __construct
+     * @param \App\Repositories\EloquentOrderRepository $orderRepository
+     * @param \App\Services\Calculator\EloquentDurationCalculator $durationCalculator
+     * @param \App\Services\Calculator\EloquentSchedulerDateCalculator $dateCalculator
+     * @param \App\Services\Contract\SortCalculator $sortCalculator
      */
     public function __construct(
         private EloquentOrderRepository $orderRepository,
         private EloquentDurationCalculator $durationCalculator,
-        private EloquentSchedulerDateCalculator $dateCalculator
+        private EloquentSchedulerDateCalculator $dateCalculator,
+        private SortCalculator $sortCalculator,
     ) {
     }
 
@@ -31,6 +37,8 @@ class EloquentSchedulerService implements SchedulerService
     {
 
         $orders = $this->orderRepository->listOrdersToSchedule();
+
+        $orders = $this->sortCalculator->process($orders);
 
         // Calculate and attach processing duration for all orders
         $ordersWithProcessingTime = $orders->map(function (Order $order) {
