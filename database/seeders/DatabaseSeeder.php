@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -52,38 +53,51 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        $need_by = Carbon::now()->addDay();
+
         Order::factory()->create([
             'customer_id' => 1,
-            'need_by' => '2024-06-13',
+            'need_by' => $need_by->format('Y-m-d'),
         ]);
 
         OrderItem::create([
             'order_id' => 1,
             'product_id' => 1,
-            'amount' => 3000
+            'amount' => rand(50, 2000)
         ]);
 
         OrderItem::create([
             'order_id' => 1,
             'product_id' => 2,
-            'amount' => 300
+            'amount' => rand(50, 2000)
         ]);
 
         Order::factory()->create([
             'customer_id' => 1,
-            'need_by' => '2024-06-14',
+            'need_by' => $need_by->format('Y-m-d'),
         ]);
 
         OrderItem::create([
             'order_id' => 2,
             'product_id' => 1,
-            'amount' => 3000
+            'amount' => rand(50, 2000)
         ]);
 
         OrderItem::create([
             'order_id' => 2,
             'product_id' => 2,
-            'amount' => 3000
+            'amount' => rand(50, 2000)
+        ]);
+
+        Order::factory()->create([
+            'customer_id' => 1,
+            'need_by' => $need_by->format('Y-m-d'),
+        ]);
+
+        OrderItem::create([
+            'order_id' => 3,
+            'product_id' => 5,
+            'amount' => rand(50, 2000)
         ]);
     }
 }

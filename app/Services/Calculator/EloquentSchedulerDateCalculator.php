@@ -20,7 +20,7 @@ class EloquentSchedulerDateCalculator
 
         if ($previousProductTypeId !== null && $previousProductTypeId !== $orderProductTypeId) {
             $order->changeover_start_date = $startDate->format("Y-m-d H:i:s");
-            $order->changeover_end_date = $startDate->addMinutes(config('scheduling.changeover.delay'))->format('Y-m-d H:i:s');
+            $order->changeover_end_date = $startDate->addMinutes((int) config('scheduling.changeover.delay'))->format('Y-m-d H:i:s');
             $order->factoring_start_date = $order->changeover_end_date;
         } else {
             $order->factoring_start_date = $startDate->format('Y-m-d H:i:s');

@@ -126,6 +126,9 @@ class EloquentOrderRepository implements OrderRepository
             ->orderBy('product_types.production_speed', 'desc')
             ->get();
 
-        return $orders;
+        /** Remove duplicates caused by the ->join() on the pivot */
+        $uniqueOrders = $orders->unique();
+
+        return $uniqueOrders;
     }
 }
